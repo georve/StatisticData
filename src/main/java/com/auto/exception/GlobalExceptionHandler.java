@@ -4,12 +4,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity handleMaxSizeException(MaxUploadSizeExceededException exc) {
+
+        ExceptionResponse response = new ExceptionResponse();
+        response.setErrorCode("TOO_LARGE");
+        response.setErrorMessage(exc.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<ExceptionResponse>(response,HttpStatus.EXPECTATION_FAILED);
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ExceptionResponse> resourceNotFound(ResourceNotFoundException ex) {
