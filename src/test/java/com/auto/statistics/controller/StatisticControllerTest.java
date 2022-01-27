@@ -149,7 +149,7 @@ public class StatisticControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(eatToDoJSON))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(result ->
                         assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
                 .andExpect(result ->
@@ -174,7 +174,7 @@ public class StatisticControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/statistic/5")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(result ->
                         assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
                 .andExpect(result ->

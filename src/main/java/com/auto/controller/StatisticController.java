@@ -56,7 +56,7 @@ public class StatisticController {
             throw new IllegalArgumentClientException("Statistic or ID must not be null!");
         }
         Optional<Statistic> optionalRecord = service.findById(id);
-        if (optionalRecord.isEmpty()) {
+        if (optionalRecord ==null || optionalRecord.isEmpty()) {
             throw new ResourceNotFoundException("Statistic with ID " + record.getId() + " does not exist.");
         }
         Statistic existingPatientRecord = optionalRecord.get();
@@ -71,7 +71,8 @@ public class StatisticController {
 
     @DeleteMapping(value = "/{id}")
     public void deletePatientById(@PathVariable(value = "id") Integer id) throws Exception {
-        if (service.findById(id).isEmpty()) {
+        Optional<Statistic> optionalRecord=service.findById(id);
+        if (optionalRecord ==null || optionalRecord.isEmpty()) {
             throw new ResourceNotFoundException("Statistic with ID " + id + " does not exist.");
         }
         service.deleteById(id);
