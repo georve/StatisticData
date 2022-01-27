@@ -21,7 +21,7 @@ public class Statistic {
     private Integer county_fips;
     private String country_name;
     private String state_name;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MMM-dd", timezone="UTC")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="UTC")
     @Temporal(TemporalType.DATE)
     private Date date;
     private Integer county_vmt;
@@ -29,7 +29,7 @@ public class Statistic {
     private Double percentageChangeFromJan;
     private Double meanCountryVmt;
     private Double meanPercentChangeFromJan;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MMM-dd", timezone="UTC")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="UTC")
     @Temporal(TemporalType.DATE)
     private Date dateAtLow;
     private Double meanCountryVmtAtLow;
