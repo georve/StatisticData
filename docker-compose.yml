@@ -19,11 +19,13 @@ services:
     depends_on:
       - mysqldb
     #command: sh -c './wait-for mysql_db:3306 -- npm start'
+    #command: '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'
     build: ./
     restart: on-failure
     env_file: ./.env
     ports:
       - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+      - $DOCKER_DEBUG_PORT:$DOCKER_DEBUG_PORT
     environment:
       SPRING_APPLICATION_JSON: '{
         "spring.datasource.url"  : "jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?useSSL=false",
