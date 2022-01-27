@@ -1,5 +1,8 @@
 package com.auto.statistics.controller;
 
+import com.auto.exception.ExceptionResponse;
+import com.auto.exception.IllegalArgumentClientException;
+import com.auto.exception.ResourceNotFoundException;
 import com.auto.model.Statistic;
 import com.auto.service.StatisticService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -93,8 +98,87 @@ public class StatisticControllerTest {
 
     }
 
-    void updateSucessFullTest() throws Exception {
+    @Test
+    void updateSuccessFullTest() throws Exception {
+        Statistic eatToDo = getSingleStatistic();
 
+        when(statisticService.findById(eatToDo.getId())).thenReturn(Optional.of(eatToDo));
+        when(statisticService.save(eatToDo)).thenReturn(eatToDo);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String eatToDoJSON = objectMapper.writeValueAsString(eatToDo);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/statistic/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(eatToDoJSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.country_name", is("Autauga")));
+
+    }
+
+    @Test
+    void updateFailureWithIdNUll() throws Exception{
+        Statistic eatToDo = getSingleStatisticNullId();
+
+        when(statisticService.findById(eatToDo.getId())).thenReturn(Optional.of(eatToDo));
+        when(statisticService.save(eatToDo)).thenReturn(eatToDo);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String eatToDoJSON = objectMapper.writeValueAsString(eatToDo);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/statistic/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(eatToDoJSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result ->
+                        assertTrue(result.getResolvedException() instanceof IllegalArgumentClientException))
+                .andExpect(result ->
+                        assertEquals("Statistic or ID must not be null!", result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    void updateFailureRecordNorFound() throws Exception{
+
+        Statistic eatToDo = getSingleStatistic();
+        when(statisticService.findById(eatToDo.getId())).thenReturn(null);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String eatToDoJSON = objectMapper.writeValueAsString(eatToDo);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/statistic/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(eatToDoJSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result ->
+                        assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
+                .andExpect(result ->
+                        assertEquals("Statistic with ID 1 does not exist.", result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void deletePatientByIdSuccess() throws Exception {
+        Statistic eatToDo = getSingleStatistic();
+        when(statisticService.findById(eatToDo.getId())).thenReturn(Optional.of(eatToDo));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/statistic/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deletePatientByIdNotFound() throws Exception {
+        when(statisticService.findById(5)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/v1/statistic/5")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result ->
+                        assertTrue(result.getResolvedException() instanceof ResourceNotFoundException))
+                .andExpect(result ->
+                        assertEquals("Statistic with ID 5 does not exist.", result.getResolvedException().getMessage()));
     }
 
     private List<Statistic> getStatisticMock() {
@@ -105,6 +189,14 @@ public class StatisticControllerTest {
     private Statistic getSingleStatistic(){
         Statistic data=new Statistic();
         data.setId(1);
+        data.setCountry_name("Autauga");
+        data.setState_name("Alabama");
+        return data;
+    }
+
+    private Statistic getSingleStatisticNullId(){
+        Statistic data=new Statistic();
+        data.setId(null);
         data.setCountry_name("Autauga");
         data.setState_name("Alabama");
         return data;

@@ -46,7 +46,7 @@ public class StatisticController {
     @PutMapping("/{id}")
     public ResponseEntity<Statistic> update(@RequestBody Statistic record,@PathVariable Integer id) throws ResourceNotFoundException, IllegalArgumentClientException {
         if (record == null || record.getId() == null) {
-            throw new IllegalArgumentClientException("PatientRecord or ID must not be null!");
+            throw new IllegalArgumentClientException("Statistic or ID must not be null!");
         }
         Optional<Statistic> optionalRecord = service.findById(id);
         if (optionalRecord.isEmpty()) {
@@ -65,7 +65,7 @@ public class StatisticController {
     @DeleteMapping(value = "/{id}")
     public void deletePatientById(@PathVariable(value = "id") Integer id) throws Exception {
         if (service.findById(id).isEmpty()) {
-            throw new ResourceNotFoundException("Patient with ID " + id + " does not exist.");
+            throw new ResourceNotFoundException("Statistic with ID " + id + " does not exist.");
         }
         service.deleteById(id);
     }

@@ -26,14 +26,12 @@ public class StatisticServiceTest {
 
     @AfterEach
     void tearDown(){
-        System.out.println("borro");
         repository.deleteAll();
     }
 
     @Test
     void getAllStatisticTest(){
-        System.out.println("primera");
-        Statistic todoSample = new Statistic(1,1000,"Uhat","Arizona",new Date(),1);
+        Statistic todoSample = getSample();
         repository.save(todoSample);
         StatisticService service = new StatisticServiceImpl(repository);
 
@@ -45,9 +43,9 @@ public class StatisticServiceTest {
 
     @Test
     void saveSuccesFullTest(){
-        System.out.println("segunda");
+
         StatisticService service = new StatisticServiceImpl(repository);
-        Statistic todoSample = new Statistic(2,1000,"Uhat","Arizona",new Date(),1);
+        Statistic todoSample = getSample();
 
         service.save(todoSample);
 
@@ -56,8 +54,7 @@ public class StatisticServiceTest {
 
     @Test
     void findByIdSuccessTest(){
-        System.out.println("tercera");
-        Statistic todoSample = new Statistic(3,1000,"Uhat","Arizona",new Date(),1);
+        Statistic todoSample = getSample();
         repository.save(todoSample);
         StatisticService service = new StatisticServiceImpl(repository);
         Optional<Statistic> value=service.findById(2);
@@ -66,6 +63,24 @@ public class StatisticServiceTest {
         assertEquals(value.get().getId(),2);
 
 
+    }
+
+    public Statistic getSample(){
+        Statistic result=new Statistic();
+        result.setId(1);
+        result.setCountry_name("Autagas");
+        result.setState_name("Alabama");
+        result.setDate(new Date());
+        result.setCounty_fips(1000);
+        result.setDate(new Date());
+        result.setBaseline_jan_vmt(35713);
+        result.setPercentageChangeFromJan(-0.6);
+        result.setMeanCountryVmt(2724285.71);
+        result.setMeanPercentChangeFromJan(-21.88);
+        result.setDateAtLow(new Date());
+        result.setMeanCountryVmtAtLow(1542857.14);
+        result.setPercentChangeFromLow(80.83);
+        return result;
     }
 
 
