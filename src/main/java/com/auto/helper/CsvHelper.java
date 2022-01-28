@@ -1,6 +1,9 @@
 package com.auto.helper;
 
 import com.auto.model.Statistic;
+import com.auto.service.CSVService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +20,8 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class CsvHelper {
-    public static String TIME_FORMAT="YYYY-MM-DD";
+    private static Logger LOGGER = LoggerFactory.getLogger(CSVService.class);
+    public static String TIME_FORMAT="DD/MM/YY";
     static SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
     public static String TYPE = "text/csv";
     static String[] HEADERs = { "county_fips",
@@ -73,8 +77,10 @@ public class CsvHelper {
 
             return tutorials;
         } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
             throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
         } catch (ParseException e) {
+            LOGGER.error(e.getMessage(), e);
             throw new RuntimeException("fail to parse date CSV file: " + e.getMessage());
 
         }
