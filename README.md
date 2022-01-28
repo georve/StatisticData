@@ -23,3 +23,4 @@ these value can be change and stored in a .env file
 path  $docker-compose up --build and this will create two containers
 one for mysql and another for the backend
 2. The rest service is provides in the port SPRING_LOCAL_PORT=6868
+3. To accessed to the api documentation this is located in http://localhost:6868/swagger-ui/index.html#/

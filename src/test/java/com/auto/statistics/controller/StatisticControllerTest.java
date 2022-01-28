@@ -141,7 +141,7 @@ public class StatisticControllerTest {
     void updateFailureRecordNorFound() throws Exception{
 
         Statistic eatToDo = getSingleStatistic();
-        when(statisticService.findById(eatToDo.getId())).thenReturn(null);
+        when(statisticService.findById(eatToDo.getId())).thenReturn(Optional.ofNullable(null));
         ObjectMapper objectMapper = new ObjectMapper();
         String eatToDoJSON = objectMapper.writeValueAsString(eatToDo);
 
@@ -169,7 +169,7 @@ public class StatisticControllerTest {
 
     @Test
     public void deletePatientByIdNotFound() throws Exception {
-        when(statisticService.findById(5)).thenReturn(null);
+        when(statisticService.findById(5)).thenReturn(Optional.ofNullable(null));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/statistic/5")
